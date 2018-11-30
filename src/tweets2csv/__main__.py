@@ -20,10 +20,11 @@ import argparse
 import sys
 import logging
 
-from cli import parse_args
+from .cli import parse_args
 
 def main(args):
-    """Main entry point allowing external calls
+    """
+    Main entry point allowing external calls
 
     Args:
       args ([str]): command line parameter list

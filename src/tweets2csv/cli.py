@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 import os
-from scraper import validate_twitter
+from .scraper import validate_twitter
 
 def validate_file(filename, extension):
     """
