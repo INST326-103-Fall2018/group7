@@ -20,41 +20,7 @@ import argparse
 import sys
 import logging
 
-from tweets2csv import __version__
-
-__author__ = "Faiz Shah"
-__copyright__ = "Faiz Shah"
-__license__ = "mit"
-
-_logger = logging.getLogger(__name__)
-
-
-def fib(n):
-    """Fibonacci example function
-
-    Args:
-      n (int): integer
-
-    Returns:
-      int: n-th Fibonacci number
-    """
-    assert n > 0
-    a, b = 1, 1
-    for i in range(n-1):
-        a, b = b, a+b
-    return a
-
-
-def setup_logging(loglevel):
-    """Setup basic logging
-
-    Args:
-      loglevel (int): minimum loglevel for emitting messages
-    """
-    logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
-    logging.basicConfig(level=loglevel, stream=sys.stdout,
-                        format=logformat, datefmt="%Y-%m-%d %H:%M:%S")
-
+from cli import parse_args
 
 def main(args):
     """Main entry point allowing external calls
@@ -63,10 +29,6 @@ def main(args):
       args ([str]): command line parameter list
     """
     args = parse_args(args)
-    setup_logging(args.loglevel)
-    _logger.debug("Starting crazy calculations...")
-    print("The {}-th Fibonacci number is {}".format(args.n, fib(args.n)))
-    _logger.info("Script ends here")
 
 
 def run():

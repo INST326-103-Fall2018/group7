@@ -4,18 +4,23 @@ import sys
 import os
 from scraper import validate_twitter
 
+def validate_file(filename, extension):
+    """
+    Examine file that has been entered to ensure it is a valid filename for a
+    particular file extension.
 
-from tweets2csv import __version__
-
-
-# validates empty csv file for output
-def validate_csv(filename):
-    """Examine file that has been entered to ensure it is an empty csv"""
-
-    if filename.endswith('csv'):
+    :param filename:
+        The filename to test.
+    :param extension:
+        The extension to test that appears AFTER THE LAST '.'
+    :return:
+        True if valid filename with extension. False if not valid filename
+        with extension.
+    """
+    if filename.endswith(extension):
         # checks that a file exists and is not blank to the left of the file extension
         dot_position = filename.rfind('.')
-        if len(filename[:dot_position] > 0):
+        if len(filename[:dot_position]) > 0:
             return True
         else:
             raise Exception(f'Invalid Basename. You entered: {OUTPUTFILE}')
@@ -24,15 +29,13 @@ def validate_csv(filename):
 
 
 def parse_args(args):
-    """Parse command line parameters
-
-    Args:
-      args ([str]): command line parameters as list of strings
-
-    Returns:
-      :obj:`argparse.Namespace`: command line parameters namespace
     """
 
+
+    :param args:
+    :return:
+    """
+    print(args)
     parser = argparse.ArgumentParser(args)
 
     # collecting the arguments
@@ -47,52 +50,13 @@ def parse_args(args):
     if not validate_twitter(TWITTERHANDLE):
         raise ValueError(f'The input Twitter handle is not valid. You entered : {TWITTERHANDLE}')
 
-    validate_csv(OUTPUTFILE)
+    validate_file(OUTPUTFILE,'csv')
 
     # validates that the csv file entered does not already exist
-    if not os.path.exists(OUTPUTFILE):
-        sys.exit(f'INVALID FILE: File exists already exists. You entered : {OUTPUTFILE}'
-    
-    
+    if os.path.exists(OUTPUTFILE):
+        sys.exit(f'INVALID FILE: File exists already exists. You entered : '
+                 f'{OUTPUTFILE}')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    #parser = argparse.ArgumentParser(
-        #description="Just a Fibonnaci demonstration")
-    #parser.add_argument(
-        '--version',
-        action='version',
-        version='tweets2csv {ver}'.format(ver=__version__))
-    parser.add_argument(
-        dest="n",
-        help="n-th Fibonacci number",
-        type=int,
-        metavar="INT")
-    parser.add_argument(
-        '-v',
-        '--verbose',
-        dest="loglevel",
-        help="set loglevel to INFO",
-        action='store_const',
-        const=logging.INFO)
-    parser.add_argument(
-        '-vv',
-        '--very-verbose',
-        dest="loglevel",
-        help="set loglevel to DEBUG",
-        action='store_const',
-        const=logging.DEBUG)
-    return parser.parse_args(args)
+    return {"twitterhandle":TWITTERHANDLE, "outputfile":OUTPUTFILE}
 
 
