@@ -18,5 +18,4 @@ def validate_twitter(twitter_handle):
     response = requests.get(f'https://twitter.com/users/username_available'
                        f'?username={twitter_handle}')
     message = json.loads(response.text)
-    print(message)
     return not message['valid']

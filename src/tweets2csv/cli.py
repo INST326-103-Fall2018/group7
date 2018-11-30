@@ -30,12 +30,13 @@ def validate_file(filename, extension):
 
 def parse_args(args):
     """
-
+    Parsed command line arguments into variables.
 
     :param args:
+        The array of command line arguments from stdin.
     :return:
+        The parsed arguments as a dictionary {twitterhandle, outputfile}
     """
-    print(args)
     parser = argparse.ArgumentParser(args)
 
     # collecting the arguments
