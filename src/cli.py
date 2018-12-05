@@ -4,6 +4,8 @@ import sys
 import os
 from .scraper import validate_twitter
 
+from unittest import TestCase as tc
+
 def validate_file(filename, extension):
     """
     Examine file that has been entered to ensure it is a valid filename for a
@@ -17,6 +19,9 @@ def validate_file(filename, extension):
         True if valid filename with extension. False if not valid filename
         with extension.
     """
+    if extension == '':
+        raise Exception(f' Invalid file extension. You entered {OUTPUTFILE}')
+
     if filename.endswith(extension):
         # checks that a file exists and is not blank to the left of the file extension
         dot_position = filename.rfind('.')
@@ -37,6 +42,8 @@ def parse_args(args):
     :return:
         The parsed arguments as a dictionary {twitterhandle, outputfile}
     """
+
+
     parser = argparse.ArgumentParser(args)
 
     # collecting the arguments
@@ -59,5 +66,29 @@ def parse_args(args):
                  f'{OUTPUTFILE}')
 
     return {"twitterhandle":TWITTERHANDLE, "outputfile":OUTPUTFILE}
+
+
+if __name__ == '__main__':
+    # test for validate file
+    tc.assertFalse(validate_file('','csv'))
+    tc.assertFalse(validate_file('.csv', 'csv'))
+    tc.assertFalse(validate_file('filename.', ''))
+    tc.assertTrue(validate_file('filename.', 'csv'))
+
+    valid_case = ['realdonaldtrump', 'test.csv']
+    # test for parse_args
+    tc.assertRaises(ValueError, parse_args(['zxcvbnmasdfghjklqwertyuiop', 'test.csv']))
+    with tc.assertRaises(SystemExit):
+        # create the file
+        with open('test.csv', 'w') as empty_csv:
+            pass
+        parse_args(['realdonaldtrump', 'test.csv'])
+        # delete the file
+        os.remove('test.csv')
+    tc.assertEqual({"twitterhandle":valid_case[0], "outputfile":valid_case[1]},parse_args(valid_case))
+
+
+
+
 
 
