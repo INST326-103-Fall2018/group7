@@ -152,7 +152,9 @@ class Tweets(list):
         response = requests.get(f'https://twitter.com/users/username_available'
                                 f'?username={twitter_handle}')
         message = json.loads(response.text)
-        return not message['valid']
+        if message['reason'] == 'taken':
+            return True
+        return False
 
     # Author: Faiz
     def __init__(self, twitter_handle, days = 7):

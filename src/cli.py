@@ -44,6 +44,8 @@ def parse_args(args):
         The parsed arguments as a dictionary {twitterhandle, outputfile}
     """
 
+    print(args)
+    print(type(args))
 
     parser = argparse.ArgumentParser(args)
 
