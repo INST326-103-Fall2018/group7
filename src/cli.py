@@ -2,10 +2,11 @@ import argparse
 import logging
 import sys
 import os
-from .scraper import Tweets
+from .Tweets import Tweets
 
 from unittest import TestCase as tc
 
+# Author: Meagan
 def validate_file(filename, extension):
     """
     Examine file that has been entered to ensure it is a valid filename for a
@@ -32,7 +33,7 @@ def validate_file(filename, extension):
     else:
         raise Exception(f'Invalid file extension. You entered: {filename}')
 
-
+# Author: Meagan
 def parse_args(args):
     """
     Parsed command line arguments into variables.
@@ -49,14 +50,23 @@ def parse_args(args):
     # collecting the arguments
     parser.add_argument('twitter_handle')
     parser.add_argument('output_csv')
+    parser.add_argument('days')
+    parser.add_argument('--cloud', nargs='?', default=False, const=True)
+    parser.add_argument('--likes', nargs='?', default=False, const=True)
 
     args = parser.parse_args()
     TWITTERHANDLE = args.twitter_handle
     OUTPUTFILE = args.output_csv
+    try:
+        DAYS = int(args.days)
+    except:
+        sys.exit(f'Please enter a valid integer for the number of days. You '
+                f'entered: {args.days}')
 
     # validating the arguments
     if not Tweets.validate_twitter(TWITTERHANDLE):
-        raise ValueError(f'The input Twitter handle is not valid. You entered : {TWITTERHANDLE}')
+        sys.exit(f'The input Twitter handle is not valid. You entered : ' \
+          '{TWITTERHANDLE}')
 
     validate_file(OUTPUTFILE,'csv')
 
@@ -65,7 +75,12 @@ def parse_args(args):
         sys.exit(f'INVALID FILE: File exists already exists. You entered : '
                  f'{OUTPUTFILE}')
 
-    return {"twitterhandle":TWITTERHANDLE, "outputfile":OUTPUTFILE}
+    if DAYS < 1 :
+        sys.exit(f'INVALID DAYS: Days must be a positive integer! You '
+                 f'entered: {DAYS}')
+
+    return {"twitterhandle":TWITTERHANDLE, "outputfile":OUTPUTFILE, "days":
+        DAYS, "cloud": args.cloud, "likes": args.likes}
 
 
 if __name__ == '__main__':
