@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 import os
-from .scraper import validate_twitter
+from .scraper import Tweets
 
 from unittest import TestCase as tc
 
@@ -20,7 +20,7 @@ def validate_file(filename, extension):
         with extension.
     """
     if extension == '':
-        raise Exception(f' Invalid file extension. You entered {OUTPUTFILE}')
+        raise Exception(f' Invalid file extension. You entered {filename}')
 
     if filename.endswith(extension):
         # checks that a file exists and is not blank to the left of the file extension
@@ -28,9 +28,9 @@ def validate_file(filename, extension):
         if len(filename[:dot_position]) > 0:
             return True
         else:
-            raise Exception(f'Invalid Basename. You entered: {OUTPUTFILE}')
+            raise Exception(f'Invalid Basename. You entered: {filename}')
     else:
-        raise Exception(f'Invalid file extension. You entered: {OUTPUTFILE}')
+        raise Exception(f'Invalid file extension. You entered: {filename}')
 
 
 def parse_args(args):
@@ -55,7 +55,7 @@ def parse_args(args):
     OUTPUTFILE = args.output_csv
 
     # validating the arguments
-    if not validate_twitter(TWITTERHANDLE):
+    if not Tweets.validate_twitter(TWITTERHANDLE):
         raise ValueError(f'The input Twitter handle is not valid. You entered : {TWITTERHANDLE}')
 
     validate_file(OUTPUTFILE,'csv')
@@ -70,10 +70,14 @@ def parse_args(args):
 
 if __name__ == '__main__':
     # test for validate file
-    tc.assertFalse(validate_file('','csv'))
-    tc.assertFalse(validate_file('.csv', 'csv'))
-    tc.assertFalse(validate_file('filename.', ''))
-    tc.assertTrue(validate_file('filename.', 'csv'))
+    with tc.assertRaises(expected_exception=Exception,self=tc):
+        validate_file('', 'csv')
+    with tc.assertRaises(expected_exception=Exception,self=tc):
+        validate_file('.csv', 'csv')
+    with tc.assertRaises(expected_exception=Exception,self=tc):
+        validate_file('filename.', '')
+    with tc.assertRaises(expected_exception=Exception,self=tc):
+        validate_file('filename.csv', 'csv')
 
     valid_case = ['realdonaldtrump', 'test.csv']
     # test for parse_args
